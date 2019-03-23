@@ -19,4 +19,31 @@ namespace SuperCombinator.Lang
 
 [<AutoOpen>]
 module Default =
-  let version = "0.0.0"
+  type Function =
+    | Uniti
+    | Unite
+    | Fst
+    | Snd
+    | Copy
+    | Voidi
+    | Voide
+    | Inl
+    | Inr
+    | Join
+    | Seq of (Function * Function)
+    | Conj of (Function * Function)
+    | Disj of (Function * Function)
+
+  type Value =
+    | Unit
+    | Pair of (Value * Value)
+    | Left of Value
+    | Right of Value
+
+  type ParseError =
+    | Todo
+    | Misc
+
+  type RuntimeError =
+    | Todo
+    | Type

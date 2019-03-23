@@ -15,14 +15,14 @@
 // License along with this program.  If not, see
 // <https://www.gnu.org/licenses/.
 
-open System
-open SuperCombinator.Lang
+namespace SuperCombinator.Lang
 
-[<EntryPoint>]
-let main argv =
-  match Function.parse "%uniti" with
-    | Ok func ->
-      printfn "function = %s" <| Function.quote func
-    | Error err ->
-      printfn "error = %A" err
-  0
+open System
+
+module String =
+  let inline replace (fst: string) (snd: string) (str: string): string =
+    str.Replace(fst, snd)
+
+  let inline split (sep: string) (str: string): string list =
+    str.Split(sep, StringSplitOptions.RemoveEmptyEntries)
+    |> Array.toList

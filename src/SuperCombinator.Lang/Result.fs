@@ -15,14 +15,19 @@
 // License along with this program.  If not, see
 // <https://www.gnu.org/licenses/.
 
-open System
-open SuperCombinator.Lang
+namespace SuperCombinator.Lang
 
-[<EntryPoint>]
-let main argv =
-  match Function.parse "%uniti" with
-    | Ok func ->
-      printfn "function = %s" <| Function.quote func
-    | Error err ->
-      printfn "error = %A" err
-  0
+open System
+
+module Result =
+  let zip (map: ('T * 'T) -> 'U) (fst: Result<'T, 'E>) (snd: Result<'T, 'E>): Result<'U, 'E> =
+    match fst with
+      | Ok fst ->
+        match snd with
+          | Ok snd ->
+            Ok <| map (fst, snd)
+          | Error err ->
+            Error err
+            
+      | Error err ->
+        Error err
