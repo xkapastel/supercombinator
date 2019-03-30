@@ -17,28 +17,11 @@
 
 namespace SuperCombinator.Lang
 
-[<AutoOpen>]
-module Library =
-  type Point2D = Point2D of (float * float)
-  type Point3D = Point3D of (float * float * float)
-  type RGBA = RGBA of (float * float * float * float)
+open Runtime
 
-  type Fault =
-    | Todo
-    | Misc of string
+module Audio =
+  let compile (src: Operator list): Result<ISound, Fault> =
+    Error Todo
 
-  type ISound =
-    abstract member Sample: float -> float
-
-  type IImage =
-    abstract member Pixel: Point2D -> RGBA
-
-  type IModel =
-    abstract member Distance: Point3D -> float
-
-  type IContainer =
-    abstract member Apply: string -> Result<unit, Fault>
-    abstract member Quote: unit -> string
-    abstract member BuildSound: string -> Result<ISound, Fault>
-    abstract member BuildImage: string -> Result<IImage, Fault>
-    abstract member BuildModel: string -> Result<IModel, Fault>
+  let render (path: string) (wave: ISound): Fault option =
+    Some Todo

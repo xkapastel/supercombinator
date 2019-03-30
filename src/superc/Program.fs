@@ -20,9 +20,10 @@ open SuperCombinator.Lang
 
 [<EntryPoint>]
 let main argv =
-  match Function.parse "%uniti" with
-    | Ok func ->
-      printfn "function = %s" <| Function.quote func
+  let ctx = Container.load "default"
+  match ctx.BuildSound "sound.test" with
+    | Ok sound ->
+      printfn "built sound test"
     | Error err ->
-      printfn "error = %A" err
+      printfn "error: %A" err
   0
