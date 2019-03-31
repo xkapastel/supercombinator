@@ -16,7 +16,7 @@
 // <https://www.gnu.org/licenses/.
 
 open System
-open SuperCombinator.Lang
+open SuperCombinator
 
 [<EntryPoint>]
 let main argv =

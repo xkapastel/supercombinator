@@ -15,14 +15,13 @@
 // License along with this program.  If not, see
 // <https://www.gnu.org/licenses/.
 
-namespace SuperCombinator.Lang
+namespace SuperCombinator
 
-open System
+open Runtime
 
-module String =
-  let inline replace (fst: string) (snd: string) (str: string): string =
-    str.Replace(fst, snd)
+module Audio =
+  let compile (src: Operator list): Result<ISound, Fault> =
+    Error Todo
 
-  let inline split (sep: string) (str: string): string list =
-    str.Split(sep, StringSplitOptions.RemoveEmptyEntries)
-    |> Array.toList
+  let render (path: string) (wave: ISound): Fault option =
+    Some Todo

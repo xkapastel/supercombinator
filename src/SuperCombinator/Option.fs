@@ -15,13 +15,19 @@
 // License along with this program.  If not, see
 // <https://www.gnu.org/licenses/.
 
-namespace SuperCombinator.Lang
+namespace SuperCombinator
 
-open Runtime
-
-module Audio =
-  let compile (src: Operator list): Result<ISound, Fault> =
-    Error Todo
-
-  let render (path: string) (wave: ISound): Fault option =
-    Some Todo
+module Option =
+  let okOr (err: 'e) (option: Option<'a>): Result<'a, 'e> =
+    match option with
+      | Some value ->
+        Ok value
+      | None ->
+        Error err
+  
+  let errorOr (value: 'a) (option: Option<'e>): Result<'a, 'e> =
+    match option with
+      | Some err ->
+        Error err
+      | None ->
+        Ok value

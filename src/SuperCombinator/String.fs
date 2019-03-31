@@ -15,19 +15,14 @@
 // License along with this program.  If not, see
 // <https://www.gnu.org/licenses/.
 
-namespace SuperCombinator.Lang
+namespace SuperCombinator
 
-module Option =
-  let okOr (err: 'e) (option: Option<'a>): Result<'a, 'e> =
-    match option with
-      | Some value ->
-        Ok value
-      | None ->
-        Error err
-  
-  let errorOr (value: 'a) (option: Option<'e>): Result<'a, 'e> =
-    match option with
-      | Some err ->
-        Error err
-      | None ->
-        Ok value
+open System
+
+module String =
+  let inline replace (fst: string) (snd: string) (str: string): string =
+    str.Replace(fst, snd)
+
+  let inline split (sep: string) (str: string): string list =
+    str.Split(sep, StringSplitOptions.RemoveEmptyEntries)
+    |> Array.toList

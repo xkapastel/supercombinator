@@ -7,6 +7,6 @@
     <Compile Include="Program.fs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\SuperCombinator.Lang\SuperCombinator.Lang.fsproj" />
+    <ProjectReference Include="..\SuperCombinator\SuperCombinator.fsproj" />
   </ItemGroup>
 </Project>

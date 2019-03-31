@@ -15,7 +15,7 @@
 // License along with this program.  If not, see
 // <https://www.gnu.org/licenses/.
 
-namespace SuperCombinator.Lang
+namespace SuperCombinator
 
 module Runtime =
   type Type =
