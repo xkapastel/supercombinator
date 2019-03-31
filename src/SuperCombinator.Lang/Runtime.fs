@@ -19,41 +19,41 @@ namespace SuperCombinator.Lang
 
 module Runtime =
   type Type =
-    | Void
-    | Unit
-    | Real
-    | Disj of (Type * Type)
-    | Conj of (Type * Type)
+    | VoidT
+    | UnitT
+    | RealT
+    | DisjT of (Type * Type)
+    | ConjT of (Type * Type)
 
   type Function =
-    | Uniti
-    | Unite
-    | Fst
-    | Snd
-    | Copy
-    | Voidi
-    | Voide
-    | Inl
-    | Inr
-    | Join
-    | Min
-    | Max
-    | Add
-    | Neg
-    | Mul
-    | Inv
-    | Exp
-    | Log
-    | Seq of (Function * Function)
-    | Disj of (Function * Function)
-    | Conj of (Function * Function)
+    | UnitiF
+    | UniteF
+    | FstF
+    | SndF
+    | CopyF
+    | VoidiF
+    | VoideF
+    | InlF
+    | InrF
+    | JoinF
+    | MinF
+    | MaxF
+    | AddF
+    | NegF
+    | MulF
+    | InvF
+    | ExpF
+    | LogF
+    | SeqF of (Function * Function)
+    | DisjF of (Function * Function)
+    | ConjF of (Function * Function)
 
   type Value =
-    | Unit
-    | Real of Value
-    | Left of Value
-    | Right of Value
-    | Pair of (Value * Value)
+    | UnitV
+    | RealV of Value
+    | LeftV of Value
+    | RightV of Value
+    | PairV of (Value * Value)
 
   type Operator =
     | PushUnitiF
@@ -69,17 +69,84 @@ module Runtime =
     | PushVoidT
     | PushUnitT
     | PushRealT
+    | ConsSeqF
+    | ConsDisjF
+    | ConsConjF
     | ConsDisjT
     | ConsConjT
-    | Var of string
+    | ExecVar of string
 
   type Object =
-    | Otyp of Type
-    | Ofun of Function
-    | Oval of Value
+    | TypeObject of Type
+    | FunctionObject of Function
+    | ValueObject of Value
 
-  let run (code: Operator list) (data: Object list): Result<Object list, Fault> =
-    Error Todo
+  let exec (code: Operator list) (data: Object list): Result<Object list, Fault> =
+    printfn "exec: [%A] [%A]" code data
+    let mutable code: Operator list = code
+    let mutable stack: Object list = data
+    let mutable fault: Fault option = None
+
+    let crash (err: Fault) =
+      fault <- Some err
+
+    let pushT (typ: Type) =
+      stack <- TypeObject typ :: stack
+
+    let pushF (func: Function) =
+      stack <- FunctionObject func :: stack
+
+    let consF2 (map: Function * Function -> Function) =
+      match stack with
+        | (FunctionObject fst) :: (FunctionObject snd) :: rest ->
+          let dst = map(fst, snd)
+          stack <- FunctionObject dst :: rest
+        | _ ->
+          crash <| Misc "consF2 expected two function objects"
+
+    let consT2 (map: Type * Type -> Type) =
+      match stack with
+        | (TypeObject fst) :: (TypeObject snd) :: rest ->
+          let dst = map(fst, snd)
+          stack <- TypeObject dst :: rest
+        | _ ->
+          crash <| Misc "consT2 expected two type objects"
+
+    while Option.isNone fault && not(List.isEmpty code) do
+      let operator = List.head code
+      code <- List.tail code
+      match operator with
+        | PushVoidT  -> pushT VoidT
+        | PushUnitT  -> pushT UnitT
+        | PushRealT  -> pushT RealT
+        | PushVoidiF -> pushF VoidiF
+        | PushVoideF -> pushF VoideF
+        | PushInlF   -> pushF InlF
+        | PushInrF   -> pushF InrF
+        | PushJoinF  -> pushF JoinF
+        | PushUnitiF -> pushF UnitiF
+        | PushUniteF -> pushF UniteF
+        | PushFstF   -> pushF FstF
+        | PushSndF   -> pushF SndF
+        | PushCopyF  -> pushF CopyF
+        | ConsDisjT  -> consT2 DisjT
+        | ConsConjT  -> consT2 ConjT
+        | ConsSeqF   -> consF2 SeqF
+        | ConsDisjF  -> consF2 DisjF
+        | ConsConjF  -> consF2 ConjF
+        | _          -> crash Todo
+    Option.errorOr stack fault
 
   let eval (func: Function) (value: Value): Result<Value, Fault> =
+    match func with
+      | UnitiF -> Ok <| PairV (value, UnitV)
+      | UniteF ->
+        match value with
+          | PairV (fst, UnitV) ->
+            Ok fst
+          | _ ->
+            Error <| Misc "UniteF tag error"
+      | _ -> Error Todo
+
+  let infer (func: Function): Result<Type, Fault> =
     Error Todo
