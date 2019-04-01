@@ -6,7 +6,12 @@ create text, audio and video content with functional programming and
 machine learning.
 
 - [Getting Started](#getting-started)
-- [Documentation](#documentation)
+- [SuperC](#superc)
+- [Waveforms](#waveforms)
+- [Pixel Fields](#pixel-fields)
+- [Distance Fields](#distance-fields)
+- [Neural Grammars](#neural-grammars)
+- [Related Projects](#related-projects)
 
 ## Getting Started
 SuperCombinator's primary abstraction is a *database* of
@@ -25,16 +30,37 @@ SuperCombinator uses Unix-style filters to create multimedia. All of
 these filters receive a patch on standard input, and a distinguished
 key as a command line argument:
 
-* `superc-sound` expects the distinguished key to build a function of
+* `superc-wave` expects the distinguished key to build a function of
   type `Real -> Real`, i.e. a function from time to sample
   intensity. It uses this function to write a stream of raw PCM data
   to standard output.
 
-* `superc-image` expects the distinguished key to build a function of
+* `superc-pixel` expects the distinguished key to build a function of
   type `R^2 -> R^4`, i.e. a function from two dimensional space to
   RGBA color space. It uses this function to write a stream of raw
   RGBA pixel data to standard output.
 
-## Documentation
-Documentation is available on [GitHub
-Pages](https://xkapastel.github.io/supercombinator).
+## SuperC
+SuperC is the programming language that powers SuperCombinator. It's a
+concatenative language: words denote operators, and juxtaposition is
+sequential composition.
+
+SuperC is nonstandard in the sense that if you want to solve some
+problem with a program `A`, you do not write it down; instead, you
+write a program that builds `A`. In this sense, SuperC programs are
+really *metaprograms* that build other programs.
+
+## Waveforms
+
+## Pixel Fields
+
+## Distance Fields
+
+## Neural Grammars
+
+## Related Projects
+SuperCombinator gets its name from SuperCollider, and also the PLT
+concept of "supercombinators", a compilation technique for functional
+programs.
+
+IBNIZ was a big influence on this project.
