@@ -18,7 +18,7 @@
 namespace SuperCombinator
 
 module Lang =
-  type Word = Word of string
+  type Ident = Ident of string
 
   type Type =
     | Void
@@ -77,6 +77,7 @@ module Lang =
     | ConsSeqF
     | ConsPlusF
     | ConsStarF
+    | Variable of Ident
 
   type Object =
     | TypeObject of Type
@@ -84,15 +85,16 @@ module Lang =
     | ValueObject of Value
 
   type Transaction =
-    | Insert of (Word * Operator list)
-    | Delete of Word
+    | Insert of (Ident * Operator list)
+    | Delete of Ident
 
-  module Word =
-    let parse (src: string): Word option =
-      None
+  module Ident =
+    let parse (src: string): Ident option =
+      Some <| Ident src
 
-    let quote (word: Word): string =
-      ""
+    let quote (ident: Ident): string =
+      match ident with
+        | Ident value -> value
 
   module Transaction =
     let parse (src: string): Transaction option =

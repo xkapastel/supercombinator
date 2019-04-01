@@ -20,7 +20,7 @@ namespace SuperCombinator
 open Lang
 
 module Norm =
-  let exec (env: Word -> Operator list option) (src: Operator list) (data: Object list): Result<Object list, DbError> =
+  let exec (env: Ident -> Operator list option) (src: Operator list) (data: Object list): Result<Object list, DbError> =
     Error <| TodoError "Norm.exec"
 
   let eval (func: Function) (value: Value): Result<Value, DbError> =
