@@ -20,8 +20,8 @@ open SuperCombinator
 
 [<EntryPoint>]
 let main argv =
-  let ctx = Container.load "default"
-  match ctx.BuildSound "sound.test" with
+  let db = Database.init()
+  match db.BuildSound "sound.test" with
     | Ok sound ->
       printfn "built sound test"
     | Error err ->

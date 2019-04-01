@@ -20,30 +20,23 @@ namespace SuperCombinator
 open System
 open System.IO
 
-module Container =
-  type FileContainer(path: string) =
-    interface IContainer with
+module Database =
+  type private Db() =
+    interface IDatabase with
       member self.Apply src =
-        Error Todo
+        None
 
       member self.Quote () =
         ""
 
       member self.BuildSound src =
-        Error Todo
+        Error <| TodoError "Db#BuildSound"
 
       member self.BuildImage src =
-        Error Todo
+        Error <| TodoError "Db#BuildImage"
 
       member self.BuildModel src =
-        Error Todo
-  
-  let load (name: string): IContainer =
-    let mutable data = Environment.GetEnvironmentVariable "XDG_DATA_HOME"
-    if isNull data then
-      let home = Environment.GetEnvironmentVariable "HOME"
-      data <- Path.Combine(home, ".local", "share")
-    let superc_root = Path.Combine(data, "supercombinator")
-    printfn "Container.load: searching %s" superc_root
-    let local = Path.Combine(superc_root, "src", name)
-    (FileContainer local) :> IContainer
+        Error <| TodoError "Db#BuildModel"
+
+  let init (): IDatabase =
+    Db() :> IDatabase

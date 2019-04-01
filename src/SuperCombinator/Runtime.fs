@@ -81,14 +81,29 @@ module Runtime =
     | FunctionObject of Function
     | ValueObject of Value
 
-  let exec (code: Operator list) (data: Object list): Result<Object list, Fault> =
+  let rec quoteV (value: Value): string =
+    match value with
+      | UnitV -> "unit"
+      | LeftV body ->
+        let body' = quoteV body
+        "L(" + body' + ")"
+      | RightV body ->
+        let body' = quoteV body
+        "R(" + body' + ")"
+      | PairV (fst, snd) ->
+        let fst' = quoteV fst
+        let snd' = quoteV snd
+        "(" + fst' + " * " + snd' + ")"
+      | RealV data -> data.ToString()
+
+  let exec (code: Operator list) (data: Object list): Result<Object list, DbError> =
     printfn "exec: [%A] [%A]" code data
     let mutable code: Operator list = code
     let mutable stack: Object list = data
-    let mutable fault: Fault option = None
+    let mutable error: DbError option = None
 
-    let crash (err: Fault) =
-      fault <- Some err
+    let crash (err: DbError) =
+      error <- Some err
 
     let pushT (typ: Type) =
       stack <- TypeObject typ :: stack
@@ -102,7 +117,7 @@ module Runtime =
           let dst = map(fst, snd)
           stack <- FunctionObject dst :: rest
         | _ ->
-          crash <| Misc "consF2 expected two function objects"
+          crash <| TodoError "consF2 expected two function objects"
 
     let consT2 (map: Type * Type -> Type) =
       match stack with
@@ -110,9 +125,9 @@ module Runtime =
           let dst = map(fst, snd)
           stack <- TypeObject dst :: rest
         | _ ->
-          crash <| Misc "consT2 expected two type objects"
+          crash <| TodoError "consT2 expected two type objects"
 
-    while Option.isNone fault && not(List.isEmpty code) do
+    while Option.isNone error && not(List.isEmpty code) do
       let operator = List.head code
       code <- List.tail code
       match operator with
@@ -134,10 +149,10 @@ module Runtime =
         | ConsSeqF   -> consF2 SeqF
         | ConsDisjF  -> consF2 DisjF
         | ConsConjF  -> consF2 ConjF
-        | _          -> crash Todo
-    Option.errorOr stack fault
+        | _          -> crash <| TodoError "basically every operator"
+    Option.errorOr stack error
 
-  let eval (func: Function) (value: Value): Result<Value, Fault> =
+  let eval (func: Function) (value: Value): Result<Value, DbError> =
     match func with
       | UnitiF -> Ok <| PairV (value, UnitV)
       | UniteF ->
@@ -145,8 +160,8 @@ module Runtime =
           | PairV (fst, UnitV) ->
             Ok fst
           | _ ->
-            Error <| Misc "UniteF tag error"
-      | _ -> Error Todo
+            Error <| TypeError ("UniteF", quoteV value)
+      | _ -> Error <| TodoError "basically every function"
 
-  let infer (func: Function): Result<Type, Fault> =
-    Error Todo
+  let infer (func: Function): Result<Type, DbError> =
+    Error <| TodoError "type inference"
