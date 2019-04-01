@@ -19,10 +19,6 @@ namespace SuperCombinator
 
 [<AutoOpen>]
 module Library =
-  type Point2D = (float * float)
-  type Point3D = (float * float * float)
-  type RGBA = (float * float * float * float)
-
   type DbError =
     | TodoError of string
     | ParseError of (string * string)
@@ -31,15 +27,7 @@ module Library =
   type ISound =
     abstract member Sample: float -> float
 
-  type IImage =
-    abstract member Pixel: Point2D -> RGBA
-
-  type IModel =
-    abstract member Distance: Point3D -> float
-
   type IDatabase =
     abstract member Apply: string -> DbError option
     abstract member Quote: unit -> string
     abstract member BuildSound: string -> Result<ISound, DbError>
-    abstract member BuildImage: string -> Result<IImage, DbError>
-    abstract member BuildModel: string -> Result<IModel, DbError>

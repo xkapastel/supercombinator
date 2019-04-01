@@ -32,11 +32,5 @@ module Database =
       member self.BuildSound src =
         Error <| TodoError "Db#BuildSound"
 
-      member self.BuildImage src =
-        Error <| TodoError "Db#BuildImage"
-
-      member self.BuildModel src =
-        Error <| TodoError "Db#BuildModel"
-
   let init (): IDatabase =
     Db() :> IDatabase
