@@ -53,8 +53,14 @@ really *metaprograms* that build other programs.
 ## Waveforms
 
 ## Pixel Fields
+A pixel field is a map from two dimensional space to a colorspace,
+typically RGBA.
 
 ## Distance Fields
+A distance field is a map from a coordinate space to a coordinate's
+distance from the surface of some shape. They can be 2D or 3D, so
+e.g. a 3D distance field is a map from three dimensional space to a
+coordinate's distance from the surface of a 3D shape.
 
 ## Neural Grammars
 
