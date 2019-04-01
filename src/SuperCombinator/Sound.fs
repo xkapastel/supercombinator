@@ -17,11 +17,9 @@
 
 namespace SuperCombinator
 
-open Runtime
-
-module Audio =
+module Sound =
   let compile (src: Operator list): Result<ISound, DbError> =
-    Error TodoError "Audio.compile"
+    Error TodoError "Sound.compile"
 
   let render (path: string) (wave: ISound): DbError option =
-    Some TodoError "Audio.render"
+    Some TodoError "Sound.render"
