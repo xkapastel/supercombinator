@@ -20,13 +20,13 @@ namespace SuperCombinator
 open Lang
 open Norm
 
-module Sound =
+module Waveform =
   type RenderOptions =
     { rate: int
       length: int }
 
-  let build (func: Function): Result<ISound, DbError> =
-    Error <| TodoError "Sound.build"
+  let build (func: Function): Result<IWaveform, DbError> =
+    Error <| TodoError "Waveform.build"
 
-  let render (options: RenderOptions) (sound: ISound): Result<byte[], DbError> =
-    Error <| TodoError "Sound.render"
+  let render (options: RenderOptions) (wave: IWaveform): Result<byte[], DbError> =
+    Error <| TodoError "Waveform.render"

@@ -24,10 +24,10 @@ module Library =
     | ParseError of (string * string)
     | TypeError of (string * string)
 
-  type ISound =
+  type IWaveform =
     abstract member Sample: float -> float
 
   type IDatabase =
     abstract member Apply: string -> DbError option
     abstract member Quote: unit -> string
-    abstract member BuildSound: string -> Result<ISound, DbError>
+    abstract member BuildWaveform: string -> Result<IWaveform, DbError>

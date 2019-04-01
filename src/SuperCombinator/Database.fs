@@ -29,8 +29,8 @@ module Database =
       member self.Quote () =
         ""
 
-      member self.BuildSound src =
-        Error <| TodoError "Db#BuildSound"
+      member self.BuildWaveform src =
+        Error <| TodoError "Db#BuildWaveform"
 
   let init (): IDatabase =
     Db() :> IDatabase
