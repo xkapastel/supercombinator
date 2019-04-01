@@ -1,8 +1,0 @@
-[book]
-title = "SuperCombinator"
-authors = ["Matthew Blount"]
-description = "The SuperCombinator manual"
-src = "./src/docs/"
-
-[build]
-build-dir = "./docs/"
