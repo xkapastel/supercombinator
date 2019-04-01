@@ -17,6 +17,8 @@
 
 namespace SuperCombinator
 
+open System.Text.RegularExpressions
+
 module Lang =
   type Ident = Ident of string
 
@@ -90,7 +92,10 @@ module Lang =
 
   module Ident =
     let parse (src: string): Ident option =
-      Some <| Ident src
+      if Regex.IsMatch(src, "^[a-z]+$") then
+        Some <| Ident src
+      else
+        None
 
     let quote (ident: Ident): string =
       match ident with
