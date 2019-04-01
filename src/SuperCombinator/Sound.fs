@@ -17,9 +17,16 @@
 
 namespace SuperCombinator
 
-module Sound =
-  let compile (src: Operator list): Result<ISound, DbError> =
-    Error TodoError "Sound.compile"
+open Lang
+open Norm
 
-  let render (path: string) (wave: ISound): DbError option =
-    Some TodoError "Sound.render"
+module Sound =
+  type RenderOptions =
+    { rate: int
+      length: int }
+
+  let build (func: Function): Result<ISound, DbError> =
+    Error <| TodoError "Sound.build"
+
+  let render (options: RenderOptions) (sound: ISound): Result<byte[], DbError> =
+    Error <| TodoError "Sound.render"

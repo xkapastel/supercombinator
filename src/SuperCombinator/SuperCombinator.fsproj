@@ -9,6 +9,7 @@
     <Compile Include="Library.fs"/>
     <Compile Include="Lang.fs"/>
     <Compile Include="Norm.fs"/>
+    <Compile Include="Sound.fs"/>
     <Compile Include="Database.fs"/>
   </ItemGroup>
 </Project>
