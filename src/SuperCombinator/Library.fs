@@ -21,8 +21,8 @@ namespace SuperCombinator
 module Library =
   type DbError =
     | TodoError of string
-    | ParseError of (string * string)
-    | TypeError of (string * string)
+    | ParseError of string
+    | TypeError of string
 
   type IWaveform =
     abstract member Sample: float -> float

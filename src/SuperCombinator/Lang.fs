@@ -101,9 +101,86 @@ module Lang =
       match ident with
         | Ident value -> value
 
+  module Operator =
+    let parse (src: string): Operator list option =
+      let token2op (token: string): Operator option =
+        match token with
+          | "%void"    -> Some PushVoidT
+          | "%unit"    -> Some PushUnitT
+          | "%voidi"   -> Some PushVoidiF
+          | "%voide"   -> Some PushVoideF
+          | "%inl"     -> Some PushInlF
+          | "%inr"     -> Some PushInrF
+          | "%join"    -> Some PushJoinF
+          | "%uniti"   -> Some PushUnitiF
+          | "%unite"   -> Some PushUniteF
+          | "%fst"     -> Some PushFstF
+          | "%snd"     -> Some PushSndF
+          | "%copy"    -> Some PushCopyF
+          | "%sum"     -> Some ConsSumT
+          | "%product" -> Some ConsProductT
+          | "%seq"     -> Some ConsSeqF
+          | "%plus"    -> Some ConsPlusF
+          | "%star"    -> Some ConsStarF
+          | _          -> Option.map Variable (Ident.parse token)
+      src
+      |> String.split " "
+      |> List.map token2op
+      |> Option.all
+
+    let quote (src: Operator list): string =
+      let op2token = function
+        | PushVoidT     -> "%void"
+        | PushUnitT     -> "%unit"
+        | PushVoidiF    -> "%voidi"
+        | PushVoideF    -> "%voide"
+        | PushInlF      -> "%inl"
+        | PushInrF      -> "%inr"
+        | PushJoinF     -> "%join"
+        | PushUnitiF    -> "%uniti"
+        | PushUniteF    -> "%unite"
+        | PushFstF      -> "%fst"
+        | PushSndF      -> "%snd"
+        | PushCopyF     -> "%copy"
+        | ConsSumT      -> "%sum"
+        | ConsProductT  -> "%product"
+        | ConsSeqF      -> "%seq"
+        | ConsPlusF     -> "%plus"
+        | ConsStarF     -> "%star"
+        | Variable name -> Ident.quote name
+
+      src |> List.map op2token |> String.join " "
+
   module Transaction =
     let parse (src: string): Transaction option =
-      None
+      if String.startsWith "+" src then
+        let tokens = String.splitN " " 2 src
+        let header = String.tail <| List.item 0 tokens
+        let body = List.item 1 tokens
+        match Ident.parse header with
+          | Some ident ->
+            match Operator.parse body with
+              | Some code ->
+                Some <| Insert (ident, code)
+              | None ->
+                None
+          | _ ->
+            None
+      elif String.startsWith "-" src then
+        match Ident.parse <| String.tail src with
+          | Some ident ->
+            Some <| Delete ident
+          | None ->
+            None
+      else
+        None
 
     let quote (tx: Transaction): string =
-      ""
+      match tx with
+        | Insert (key, value) ->
+          let key' = Ident.quote key
+          let value' = Operator.quote value
+          "+" + key' + " " + value'
+        | Delete key ->
+          let key' = Ident.quote key
+          "-" + key'

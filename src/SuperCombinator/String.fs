@@ -26,3 +26,16 @@ module String =
   let inline split (sep: string) (str: string): string list =
     str.Split(sep, StringSplitOptions.RemoveEmptyEntries)
     |> Array.toList
+
+  let inline splitN (sep: string) (count: int) (str: string): string list =
+    str.Split(sep, count, StringSplitOptions.RemoveEmptyEntries)
+    |> Array.toList
+
+  let inline startsWith (prefix: string) (str: string): bool =
+    str.StartsWith(prefix)
+
+  let inline tail (str: string): string =
+    str.Substring(1)
+
+  let inline join (sep: string) (xs: string list): string =
+    String.Join(sep, xs)
