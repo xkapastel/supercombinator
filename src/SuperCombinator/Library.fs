@@ -111,4 +111,5 @@ module Library =
   type IDatabase =
     abstract member Apply: string -> DbError option
     abstract member Quote: unit -> string
+    abstract member BuildFunction: Operator list -> Result<Function, DbError>
     abstract member BuildWaveform: string -> Result<IWaveform, DbError>

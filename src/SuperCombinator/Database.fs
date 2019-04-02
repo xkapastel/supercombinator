@@ -49,6 +49,16 @@ module Database =
 
         String.join "\n" <| Map.fold step [] data
 
+      member self.BuildFunction src =
+        let env name = None
+        match Norm.exec env src [] with
+          | Ok [FunctionObject func] ->
+            Ok func
+          | Error err ->
+            Error err
+          | _ ->
+            Error <| TypeError "IDatabase#BuildFunction"
+
       member self.BuildWaveform src =
         Error <| TodoError "Db#BuildWaveform"
 
