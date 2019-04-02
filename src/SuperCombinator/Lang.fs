@@ -113,79 +113,82 @@ module Lang =
         | Ident value -> value
 
   module Operator =
+    let private parseItem (token: string): Operator option =
+      match token with
+        | "%void"    -> Some PushVoidT
+        | "%unit"    -> Some PushUnitT
+        | "%real"    -> Some PushRealT
+        | "%voidi"   -> Some PushVoidiF
+        | "%voide"   -> Some PushVoideF
+        | "%inl"     -> Some PushInlF
+        | "%inr"     -> Some PushInrF
+        | "%join"    -> Some PushJoinF
+        | "%uniti"   -> Some PushUnitiF
+        | "%unite"   -> Some PushUniteF
+        | "%fst"     -> Some PushFstF
+        | "%snd"     -> Some PushSndF
+        | "%copy"    -> Some PushCopyF
+        | "%min"     -> Some PushMinF
+        | "%max"     -> Some PushMaxF
+        | "%add"     -> Some PushAddF
+        | "%neg"     -> Some PushNegF
+        | "%mul"     -> Some PushMulF
+        | "%inv"     -> Some PushInvF
+        | "%exp"     -> Some PushExpF
+        | "%log"     -> Some PushLogF
+        | "%cos"     -> Some PushCosF
+        | "%sin"     -> Some PushSinF
+        | "%sum"     -> Some ConsSumT
+        | "%product" -> Some ConsProductT
+        | "%seq"     -> Some ConsSeqF
+        | "%plus"    -> Some ConsPlusF
+        | "%star"    -> Some ConsStarF
+        | _          -> Option.map Variable (Ident.parse token)
+
+    let private quoteItem = function
+      | PushVoidT     -> "%void"
+      | PushUnitT     -> "%unit"
+      | PushRealT     -> "%real"
+      | PushVoidiF    -> "%voidi"
+      | PushVoideF    -> "%voide"
+      | PushInlF      -> "%inl"
+      | PushInrF      -> "%inr"
+      | PushJoinF     -> "%join"
+      | PushUnitiF    -> "%uniti"
+      | PushUniteF    -> "%unite"
+      | PushFstF      -> "%fst"
+      | PushSndF      -> "%snd"
+      | PushCopyF     -> "%copy"
+      | PushMinF      -> "%min"
+      | PushMaxF      -> "%max"
+      | PushAddF      -> "%add"
+      | PushNegF      -> "%neg"
+      | PushMulF      -> "%mul"
+      | PushInvF      -> "%inv"
+      | PushExpF      -> "%exp"
+      | PushLogF      -> "%log"
+      | PushCosF      -> "%cos"
+      | PushSinF      -> "%sin"
+      | ConsSumT      -> "%sum"
+      | ConsProductT  -> "%product"
+      | ConsSeqF      -> "%seq"
+      | ConsPlusF     -> "%plus"
+      | ConsStarF     -> "%star"
+      | Variable name -> Ident.quote name
+
     let parse (src: string): Operator list option =
-      let token2op (token: string): Operator option =
-        match token with
-          | "%void"    -> Some PushVoidT
-          | "%unit"    -> Some PushUnitT
-          | "%real"    -> Some PushRealT
-          | "%voidi"   -> Some PushVoidiF
-          | "%voide"   -> Some PushVoideF
-          | "%inl"     -> Some PushInlF
-          | "%inr"     -> Some PushInrF
-          | "%join"    -> Some PushJoinF
-          | "%uniti"   -> Some PushUnitiF
-          | "%unite"   -> Some PushUniteF
-          | "%fst"     -> Some PushFstF
-          | "%snd"     -> Some PushSndF
-          | "%copy"    -> Some PushCopyF
-          | "%min"     -> Some PushMinF
-          | "%max"     -> Some PushMaxF
-          | "%add"     -> Some PushAddF
-          | "%neg"     -> Some PushNegF
-          | "%mul"     -> Some PushMulF
-          | "%inv"     -> Some PushInvF
-          | "%exp"     -> Some PushExpF
-          | "%log"     -> Some PushLogF
-          | "%cos"     -> Some PushCosF
-          | "%sin"     -> Some PushSinF
-          | "%sum"     -> Some ConsSumT
-          | "%product" -> Some ConsProductT
-          | "%seq"     -> Some ConsSeqF
-          | "%plus"    -> Some ConsPlusF
-          | "%star"    -> Some ConsStarF
-          | _          -> Option.map Variable (Ident.parse token)
       src
       |> String.split " "
-      |> List.map token2op
+      |> List.map parseItem
       |> Option.all
 
     let quote (src: Operator list): string =
-      let op2token = function
-        | PushVoidT     -> "%void"
-        | PushUnitT     -> "%unit"
-        | PushRealT     -> "%real"
-        | PushVoidiF    -> "%voidi"
-        | PushVoideF    -> "%voide"
-        | PushInlF      -> "%inl"
-        | PushInrF      -> "%inr"
-        | PushJoinF     -> "%join"
-        | PushUnitiF    -> "%uniti"
-        | PushUniteF    -> "%unite"
-        | PushFstF      -> "%fst"
-        | PushSndF      -> "%snd"
-        | PushCopyF     -> "%copy"
-        | PushMinF      -> "%min"
-        | PushMaxF      -> "%max"
-        | PushAddF      -> "%add"
-        | PushNegF      -> "%neg"
-        | PushMulF      -> "%mul"
-        | PushInvF      -> "%inv"
-        | PushExpF      -> "%exp"
-        | PushLogF      -> "%log"
-        | PushCosF      -> "%cos"
-        | PushSinF      -> "%sin"
-        | ConsSumT      -> "%sum"
-        | ConsProductT  -> "%product"
-        | ConsSeqF      -> "%seq"
-        | ConsPlusF     -> "%plus"
-        | ConsStarF     -> "%star"
-        | Variable name -> Ident.quote name
-
-      src |> List.map op2token |> String.join " "
+      src
+      |> List.map quoteItem
+      |> String.join " "
 
   module Transaction =
-    let parse (src: string): Transaction option =
+    let private parseItem (src: string): Transaction option =
       if String.startsWith "+" src then
         let tokens = String.splitN " " 2 src
         eprintfn "Transaction.parse: tokens: %A" tokens
@@ -209,7 +212,7 @@ module Lang =
       else
         None
 
-    let quote (tx: Transaction): string =
+    let private quoteItem (tx: Transaction): string =
       match tx with
         | Insert (key, value) ->
           let key' = Ident.quote key
@@ -218,3 +221,14 @@ module Lang =
         | Delete key ->
           let key' = Ident.quote key
           "-" + key'
+
+    let parse (src: string): Transaction list option =
+      src
+      |> String.split "\n"
+      |> List.map parseItem
+      |> Option.all
+
+    let quote (xs: Transaction list): string =
+      xs
+      |> List.map quoteItem
+      |> String.join "\n"

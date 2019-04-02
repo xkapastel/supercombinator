@@ -28,17 +28,19 @@ module Database =
     let mutable data: Map<string, Operator list> = Map.ofSeq []
 
     interface IDatabase with
-      member self.Apply line =
-        eprintfn "Db#Apply: %s" line
-        match Transaction.parse line with
-          | Some (Insert ((Ident name), value)) ->
-            data <- Map.add name value data
-            None
-          | Some (Delete (Ident name)) ->
-            data <- Map.remove name data
+      member self.Apply src =
+        eprintfn "Db#Apply: %s" src
+        match Transaction.parse src with
+          | Some xs ->
+            for transaction in xs do
+              match transaction with
+                | Insert ((Ident name), value) ->
+                  data <- Map.add name value data
+                | Delete (Ident name) ->
+                  data <- Map.remove name data
             None
           | None ->
-            Some <| ParseError line
+            Some <| ParseError src
 
       member self.Quote () =
         let step (state: string list) (key: string) (value: Operator list): string list =
