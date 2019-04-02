@@ -17,7 +17,6 @@
 
 namespace SuperCombinator
 
-open Lang
 open Norm
 
 module Waveform =

@@ -19,6 +19,87 @@ namespace SuperCombinator
 
 [<AutoOpen>]
 module Library =
+  type Ident = Ident of string
+
+  type Type =
+    | Void
+    | Unit
+    | Real
+    | Sum of (Type * Type)
+    | Product of (Type * Type)
+
+  type Function =
+    | Voidi
+    | Voide
+    | Inl
+    | Inr
+    | Join
+    | Uniti
+    | Unite
+    | Fst
+    | Snd
+    | Copy
+    | Min
+    | Max
+    | Add
+    | Neg
+    | Mul
+    | Inv
+    | Exp
+    | Log
+    | Cos
+    | Sin
+    | Seq of (Function * Function)
+    | Plus of (Function * Function)
+    | Star of (Function * Function)
+
+  type Value =
+    | Unit
+    | Real of float
+    | Left of Value
+    | Right of Value
+    | Pair of (Value * Value)
+
+  type Operator =
+    | PushVoidiF
+    | PushVoideF
+    | PushInlF
+    | PushInrF
+    | PushJoinF
+    | PushUnitiF
+    | PushUniteF
+    | PushFstF
+    | PushSndF
+    | PushCopyF
+    | PushMinF
+    | PushMaxF
+    | PushAddF
+    | PushNegF
+    | PushMulF
+    | PushInvF
+    | PushExpF
+    | PushLogF
+    | PushSinF
+    | PushCosF
+    | PushVoidT
+    | PushUnitT
+    | PushRealT
+    | ConsSumT
+    | ConsProductT
+    | ConsSeqF
+    | ConsPlusF
+    | ConsStarF
+    | Variable of Ident
+
+  type Object =
+    | TypeObject of Type
+    | FunctionObject of Function
+    | ValueObject of Value
+
+  type Transaction =
+    | Insert of (Ident * Operator list)
+    | Delete of Ident
+
   type DbError =
     | TodoError of string
     | ParseError of string

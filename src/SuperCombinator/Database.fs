@@ -20,7 +20,6 @@ namespace SuperCombinator
 open System
 open System.IO
 
-open Lang
 open Norm
 
 module Database =

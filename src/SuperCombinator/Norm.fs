@@ -17,8 +17,6 @@
 
 namespace SuperCombinator
 
-open Lang
-
 module Norm =
   let exec (env: Ident -> Operator list option) (src: Operator list) (data: Object list): Result<Object list, DbError> =
     Error <| TodoError "Norm.exec"

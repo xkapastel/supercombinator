@@ -7,7 +7,9 @@
     <Compile Include="Option.fs"/>
     <Compile Include="Result.fs"/>
     <Compile Include="Library.fs"/>
-    <Compile Include="Lang.fs"/>
+    <Compile Include="Ident.fs"/>
+    <Compile Include="Operator.fs"/>
+    <Compile Include="Transaction.fs"/>
     <Compile Include="Norm.fs"/>
     <Compile Include="Waveform.fs"/>
     <Compile Include="Database.fs"/>

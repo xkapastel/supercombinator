@@ -17,4 +17,15 @@
 
 namespace SuperCombinator
 
-module Lang =
+open System.Text.RegularExpressions
+
+module Ident =
+  let parse (src: string): Ident option =
+    if Regex.IsMatch(src, "^[a-z]+$") then
+      Some <| Ident src
+    else
+      None
+
+  let quote (ident: Ident): string =
+    match ident with
+      | Ident value -> value
