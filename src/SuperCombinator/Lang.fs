@@ -72,8 +72,19 @@ module Lang =
     | PushFstF
     | PushSndF
     | PushCopyF
+    | PushMinF
+    | PushMaxF
+    | PushAddF
+    | PushNegF
+    | PushMulF
+    | PushInvF
+    | PushExpF
+    | PushLogF
+    | PushSinF
+    | PushCosF
     | PushVoidT
     | PushUnitT
+    | PushRealT
     | ConsSumT
     | ConsProductT
     | ConsSeqF
@@ -107,6 +118,7 @@ module Lang =
         match token with
           | "%void"    -> Some PushVoidT
           | "%unit"    -> Some PushUnitT
+          | "%real"    -> Some PushRealT
           | "%voidi"   -> Some PushVoidiF
           | "%voide"   -> Some PushVoideF
           | "%inl"     -> Some PushInlF
@@ -117,6 +129,16 @@ module Lang =
           | "%fst"     -> Some PushFstF
           | "%snd"     -> Some PushSndF
           | "%copy"    -> Some PushCopyF
+          | "%min"     -> Some PushMinF
+          | "%max"     -> Some PushMaxF
+          | "%add"     -> Some PushAddF
+          | "%neg"     -> Some PushNegF
+          | "%mul"     -> Some PushMulF
+          | "%inv"     -> Some PushInvF
+          | "%exp"     -> Some PushExpF
+          | "%log"     -> Some PushLogF
+          | "%cos"     -> Some PushCosF
+          | "%sin"     -> Some PushSinF
           | "%sum"     -> Some ConsSumT
           | "%product" -> Some ConsProductT
           | "%seq"     -> Some ConsSeqF
@@ -132,6 +154,7 @@ module Lang =
       let op2token = function
         | PushVoidT     -> "%void"
         | PushUnitT     -> "%unit"
+        | PushRealT     -> "%real"
         | PushVoidiF    -> "%voidi"
         | PushVoideF    -> "%voide"
         | PushInlF      -> "%inl"
@@ -142,6 +165,16 @@ module Lang =
         | PushFstF      -> "%fst"
         | PushSndF      -> "%snd"
         | PushCopyF     -> "%copy"
+        | PushMinF      -> "%min"
+        | PushMaxF      -> "%max"
+        | PushAddF      -> "%add"
+        | PushNegF      -> "%neg"
+        | PushMulF      -> "%mul"
+        | PushInvF      -> "%inv"
+        | PushExpF      -> "%exp"
+        | PushLogF      -> "%log"
+        | PushCosF      -> "%cos"
+        | PushSinF      -> "%sin"
         | ConsSumT      -> "%sum"
         | ConsProductT  -> "%product"
         | ConsSeqF      -> "%seq"

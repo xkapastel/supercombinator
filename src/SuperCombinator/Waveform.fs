@@ -25,8 +25,26 @@ module Waveform =
     { rate: int
       length: int }
 
-  let build (func: Function): Result<IWaveform, DbError> =
-    Error <| TodoError "Waveform.build"
+  type private Wave =
+    | Wave of Function
+    interface IWaveform with
+      member self.Sample time =
+        match self with
+          | Wave func ->
+            match Norm.eval func <| Real time with
+              | Ok (Real sample) ->
+                sample
+              | _ ->
+                printfn "Waveform.fs: WARNING: type error"
+                0.0
 
-  let render (options: RenderOptions) (wave: IWaveform): Result<byte[], DbError> =
-    Error <| TodoError "Waveform.render"
+  let build (func: Function): Result<IWaveform, DbError> =
+    Ok (Wave func :> IWaveform)
+
+  let render (cfg: RenderOptions) (wave: IWaveform): byte[] =
+    let numSamples = cfg.rate * cfg.length
+    let buf: byte[] = Array.create numSamples (byte 0)
+    for i in 1..numSamples do
+      let time: float = (float i) / (float cfg.rate)
+      buf.[i] <- byte(255.0 * wave.Sample time)
+    buf

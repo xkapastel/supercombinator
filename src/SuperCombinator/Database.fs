@@ -34,6 +34,7 @@ module Database =
         while Option.isNone error && not(List.isEmpty lines) do
           let line = List.head lines
           lines <- List.tail lines
+          printfn "IDatabase#Apply: %s" line
           match Transaction.parse line with
             | Some (Insert ((Ident name), value)) ->
               data <- Map.add name value data
