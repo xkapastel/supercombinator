@@ -188,6 +188,7 @@ module Lang =
     let parse (src: string): Transaction option =
       if String.startsWith "+" src then
         let tokens = String.splitN " " 2 src
+        eprintfn "Transaction.parse: tokens: %A" tokens
         let header = String.tail <| List.item 0 tokens
         let body = List.item 1 tokens
         match Ident.parse header with

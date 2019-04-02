@@ -24,15 +24,16 @@ open Waveform
 let main argv =
   let db = Database.init()
   let input = stdin.ReadToEnd()
-  let mutable lines: string list = String.split " " input
+  let mutable lines: string list = String.split "\n" input
   let mutable error: DbError option = None
+  eprintfn "main.lines: %A" lines
   while Option.isNone error && not(List.isEmpty lines) do
     let line = List.head lines
     lines <- List.tail lines
     error <- db.Apply line
   match error with
     | Some error ->
-      printfn "ERROR: %A" error
+      eprintfn "ERROR: %A" error
       1
     | None ->
       match db.BuildWaveform "stdout" with
@@ -43,5 +44,5 @@ let main argv =
           stream.Write(samples, 0, Array.length samples)
           0
         | Error error ->
-          printfn "ERROR: %A" error
+          eprintfn "ERROR: %A" error
           1

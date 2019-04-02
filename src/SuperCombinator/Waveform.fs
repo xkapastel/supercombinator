@@ -35,7 +35,7 @@ module Waveform =
               | Ok (Real sample) ->
                 sample
               | _ ->
-                printfn "Waveform.fs: WARNING: type error"
+                eprintfn "Waveform.fs: WARNING: type error"
                 0.0
 
   let build (func: Function): Result<IWaveform, DbError> =

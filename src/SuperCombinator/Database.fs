@@ -28,21 +28,17 @@ module Database =
     let mutable data: Map<string, Operator list> = Map.ofSeq []
 
     interface IDatabase with
-      member self.Apply src =
-        let mutable lines: string list = String.split "\n" src
-        let mutable error: DbError option = None
-        while Option.isNone error && not(List.isEmpty lines) do
-          let line = List.head lines
-          lines <- List.tail lines
-          printfn "IDatabase#Apply: %s" line
-          match Transaction.parse line with
-            | Some (Insert ((Ident name), value)) ->
-              data <- Map.add name value data
-            | Some (Delete (Ident name)) ->
-              data <- Map.remove name data
-            | None ->
-              error <- Some <| ParseError line
-        error
+      member self.Apply line =
+        eprintfn "Db#Apply: %s" line
+        match Transaction.parse line with
+          | Some (Insert ((Ident name), value)) ->
+            data <- Map.add name value data
+            None
+          | Some (Delete (Ident name)) ->
+            data <- Map.remove name data
+            None
+          | None ->
+            Some <| ParseError line
 
       member self.Quote () =
         let step (state: string list) (key: string) (value: Operator list): string list =
