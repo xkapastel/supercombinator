@@ -19,31 +19,24 @@ namespace SuperCombinator
 
 open Norm
 
-module Waveform =
+module Audio =
   type RenderOptions =
     { rate: int
       length: int }
 
-  type private Wave =
-    | Wave of Function
-    interface IWaveform with
-      member self.Sample time =
-        match self with
-          | Wave func ->
-            match Norm.eval func <| Real time with
-              | Ok (Real sample) ->
-                sample
-              | _ ->
-                eprintfn "Waveform.fs: WARNING: type error"
-                0.0
+  let private sample (func: Function) (time: float): float =
+    match Norm.eval func <| Real time with
+      | Ok (Real sample) ->
+        sample
+      | _ ->
+        eprintfn "Audio.fs: WARNING: type error while rendering"
+        0.0
 
-  let build (func: Function): Result<IWaveform, DbError> =
-    Ok (Wave func :> IWaveform)
-
-  let render (cfg: RenderOptions) (wave: IWaveform): byte[] =
+  let render (cfg: RenderOptions) (func: Function): byte[] =
     let numSamples = cfg.rate * cfg.length
     let buf: byte[] = Array.create numSamples (byte 0)
     for i in 1..numSamples do
       let time: float = (float i) / (float cfg.rate)
-      buf.[i] <- byte(255.0 * wave.Sample time)
+      let sample: float = sample func time
+      buf.[i] <- byte(255.0 * sample)
     buf
