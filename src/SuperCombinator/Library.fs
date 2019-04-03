@@ -109,7 +109,7 @@ module Library =
     abstract member Sample: float -> float
 
   type IDatabase =
-    abstract member Apply: string -> DbError option
-    abstract member Quote: unit -> string
+    abstract member Apply: Transaction list -> unit
+    abstract member Quote: unit -> Transaction list
     abstract member BuildFunction: Operator list -> Result<Function, DbError>
     abstract member BuildWaveform: string -> Result<IWaveform, DbError>
