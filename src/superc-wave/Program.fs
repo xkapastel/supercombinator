@@ -18,31 +18,31 @@
 open System
 open System.IO
 open SuperCombinator
-open Waveform
+open Audio
 
 [<EntryPoint>]
 let main argv =
   let db = Database.init()
   let input = stdin.ReadToEnd()
-  let mutable lines: string list = String.split "\n" input
-  let mutable error: DbError option = None
-  eprintfn "main.lines: %A" lines
-  while Option.isNone error && not(List.isEmpty lines) do
-    let line = List.head lines
-    lines <- List.tail lines
-    error <- db.Apply line
-  match error with
-    | Some error ->
-      eprintfn "ERROR: %A" error
-      1
-    | None ->
-      match db.BuildWaveform "stdout" with
-        | Ok wave ->
-          let cfg  = { rate = 8000; length = 4 }
-          let samples = Waveform.render cfg wave
-          let stream = Console.OpenStandardOutput()
-          stream.Write(samples, 0, Array.length samples)
-          0
-        | Error error ->
-          eprintfn "ERROR: %A" error
+  match Transaction.parse input with
+    | Some tx ->
+      db.Apply tx
+      match Operator.parse "audio" with
+        | Some src ->
+          match db.BuildFunction src with
+            | Ok func ->
+              let cfg = { rate = 8000; length = 4; }
+              let samples = Audio.render cfg func
+              let stream = Console.OpenStandardOutput()
+              eprintfn "Rendering..."
+              stream.Write(samples, 0, Array.length samples)
+              0
+            | Error err ->
+              eprintfn "ERROR: %A" err
+              1
+        | None ->
+          eprintfn "ERROR: Couldn't build audio"
           1
+    | None ->
+      eprintfn "ERROR: Invalid transaction"
+      1
