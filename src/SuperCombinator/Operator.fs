@@ -20,9 +20,7 @@ namespace SuperCombinator
 module Operator =
   let private parseItem (token: string): Operator option =
     match token with
-      | "%void"    -> Some PushVoidT
-      | "%unit"    -> Some PushUnitT
-      | "%real"    -> Some PushRealT
+      | "%unit"    -> Some PushUnitV
       | "%voidi"   -> Some PushVoidiF
       | "%voide"   -> Some PushVoideF
       | "%inl"     -> Some PushInlF
@@ -43,17 +41,22 @@ module Operator =
       | "%log"     -> Some PushLogF
       | "%cos"     -> Some PushCosF
       | "%sin"     -> Some PushSinF
-      | "%sum"     -> Some ConsSumT
-      | "%product" -> Some ConsProductT
+      | "%Void"    -> Some PushVoidT
+      | "%Unit"    -> Some PushUnitT
+      | "%Real"    -> Some PushRealT
+      | "%left"    -> Some ConsLeftV
+      | "%right"   -> Some ConsRightV
+      | "%pair"    -> Some ConsPairV
       | "%seq"     -> Some ConsSeqF
       | "%plus"    -> Some ConsPlusF
       | "%star"    -> Some ConsStarF
+      | "%Sum"     -> Some ConsSumT
+      | "%Product" -> Some ConsProductT
       | _          -> Option.map Variable (Ident.parse token)
 
   let private quoteItem = function
-    | PushVoidT     -> "%void"
-    | PushUnitT     -> "%unit"
-    | PushRealT     -> "%real"
+    | PushUnitV     -> "%unit"
+    | PushRealV u   -> "%todo-real"
     | PushVoidiF    -> "%voidi"
     | PushVoideF    -> "%voide"
     | PushInlF      -> "%inl"
@@ -74,11 +77,17 @@ module Operator =
     | PushLogF      -> "%log"
     | PushCosF      -> "%cos"
     | PushSinF      -> "%sin"
-    | ConsSumT      -> "%sum"
-    | ConsProductT  -> "%product"
+    | PushVoidT     -> "%Void"
+    | PushUnitT     -> "%Unit"
+    | PushRealT     -> "%Real"
+    | ConsLeftV     -> "%left"
+    | ConsRightV    -> "%right"
+    | ConsPairV     -> "%pair"
     | ConsSeqF      -> "%seq"
     | ConsPlusF     -> "%plus"
     | ConsStarF     -> "%star"
+    | ConsSumT      -> "%Sum"
+    | ConsProductT  -> "%Product"
     | Variable name -> Ident.quote name
 
   let parse (src: string): Operator list option =

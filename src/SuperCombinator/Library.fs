@@ -61,6 +61,8 @@ module Library =
     | Pair of (Value * Value)
 
   type Operator =
+    | PushUnitV
+    | PushRealV of float
     | PushVoidiF
     | PushVoideF
     | PushInlF
@@ -84,11 +86,14 @@ module Library =
     | PushVoidT
     | PushUnitT
     | PushRealT
-    | ConsSumT
-    | ConsProductT
+    | ConsLeftV
+    | ConsRightV
+    | ConsPairV
     | ConsSeqF
     | ConsPlusF
     | ConsStarF
+    | ConsSumT
+    | ConsProductT
     | Variable of Ident
 
   type Object =
